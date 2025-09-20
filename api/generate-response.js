@@ -8,11 +8,12 @@ export default async function handler(req, context) {
         });
     }
 
-    const tripData = await req.json();
+    const artistData = await req.json();
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-    if (!tripData.destination || !tripData.duration || !tripData.vibe || !GEMINI_API_KEY) {
-        return new Response(JSON.stringify({ error: "Missing required trip data or API key." }), {
+    // --- NEW VALIDATION ---
+    if (!artistData.artistStory || !artistData.artistExperience || !artistData.artistStyle || !GEMINI_API_KEY) {
+        return new Response(JSON.stringify({ error: "Missing required artist data or API key." }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
         });
@@ -21,33 +22,29 @@ export default async function handler(req, context) {
     const model = 'gemini-1.5-flash-latest';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
 
+    // --- NEW PROMPT ---
     const prompt = `
-        You are an expert travel planner. Your task is to generate a detailed travel itinerary based on user preferences.
+        You are an expert marketing assistant and copywriter for creative artists. 
+        Your task is to generate a social media story, three business taglines, and a captivating advertisement text based on the artist's details.
 
-        User Preferences:
-        - Destination: ${tripData.destination}
-        - Trip Duration: ${tripData.duration} days
-        - Desired Vibe: ${tripData.vibe}
+        Artist's Details:
+        - Story and Inspiration: ${artistData.artistStory}
+        - Experience Level: ${artistData.artistExperience}
+        - Artistic Style: ${artistData.artistStyle}
 
-        Your response MUST be in a valid JSON format based on this structure:
+        Your response MUST be in a valid JSON format. The JSON object must have the following structure exactly:
         {
-          "tripName": "A ${tripData.duration}-Day Trip to ${tripData.destination}",
-          "itinerary": [
-            {
-              "day": 1,
-              "theme": "A theme for the day (e.g., 'Arrival and Exploration')",
-              "activities": [
-                { "time": "Morning", "description": "A detailed activity description for the morning." },
-                { "time": "Afternoon", "description": "A detailed activity description for the afternoon." },
-                { "time": "Evening", "description": "A detailed activity description for the evening." }
-              ]
-            }
-          ]
+          "socialMediaStory": "A short, engaging story for Instagram or Facebook, written in the first person. It should be warm and authentic, weaving in the artist's inspiration.",
+          "taglines": [
+            "A short, memorable tagline that captures the essence of the artist's brand.",
+            "A second tagline option, perhaps focusing on the style or craft.",
+            "A third, more descriptive tagline."
+          ],
+          "advertisementText": "A compelling paragraph for a paid ad. It should start with a strong hook, describe the unique value of the art, and end with a clear call to action like 'Discover the collection today.'."
         }
-        Generate one object in the "itinerary" array for each day of the trip (e.g., a 3-day trip should have 3 objects in the array). Do not include any text outside of the JSON object.
+        Do not include any text outside of the JSON object.
     `;
 
-    // ✅ FINAL FIX: Enable JSON Mode for reliable output
     const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
@@ -74,7 +71,6 @@ export default async function handler(req, context) {
             throw new Error(`API call failed with status: ${geminiResponse.status}`);
         }
 
-        // With JSON mode, we can parse the response directly without cleaning
         const result = await geminiResponse.json();
         
         if (!result.candidates || result.candidates.length === 0) {
@@ -83,16 +79,16 @@ export default async function handler(req, context) {
         }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        const tripPlan = JSON.parse(rawText);
+        const marketingContent = JSON.parse(rawText);
 
-        return new Response(JSON.stringify(tripPlan), {
+        return new Response(JSON.stringify(marketingContent), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
 
     } catch (error) {
         console.error("Error in handler:", error);
-        return new Response(JSON.stringify({ error: "Failed to generate the trip plan." }), {
+        return new Response(JSON.stringify({ error: "Failed to generate marketing content." }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });

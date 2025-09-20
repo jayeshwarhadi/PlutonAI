@@ -206,129 +206,146 @@
             </div>
         </footer>
         <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                const chatbox = document.getElementById("chatbox");
-                const inputArea = document.getElementById("input-area");
-                let tripData = {};
+        document.addEventListener("DOMContentLoaded", () => {
+            const chatbox = document.getElementById("chatbox");
+            const inputArea = document.getElementById("input-area");
+            let artistData = {};
 
-                const conversationTree = {
-                    start: {
-                        text: "Hi! I'm here to help you plan an amazing trip. First, where would you like to go?",
-                        inputType: 'text',
-                        placeholder: 'e.g., Cairo, Bali, New York',
-                        key: "destination",
-                        next: "duration"
-                    },
-                    duration: {
-                        text: "Great choice! How long will your trip be?",
-                        options: [{ text: "3 Days", next: "vibe", value: 3 }, { text: "5 Days", next: "vibe", value: 5 }, { text: "7 Days", next: "vibe", value: 7 }],
-                        key: "duration"
-                    },
-                    vibe: {
-                        text: "What kind of vibe are you looking for?",
-                        options: [{ text: "Relaxing 😌", next: "generate", value: "Relaxing and scenic" }, { text: "Adventurous 🧗", next: "generate", value: "Action-packed and adventurous" }, { text: "Cultural 🏛️", next: "generate", value: "Cultural and historical" }],
-                        key: "vibe"
-                    },
-                    generate: { text: "Perfect! I have all the info I need. I'm now generating your custom itinerary..." }
-                };
+            // --- NEW CONVERSATION FLOW ---
+            const conversationTree = {
+                start: {
+                    text: "Hello! Let's craft your brand's voice. To start, tell me a little about your story. What inspires you to create?",
+                    inputType: 'text',
+                    placeholder: 'e.g., I inherited my love for woodwork from my grandfather...',
+                    key: "artistStory",
+                    next: "experience"
+                },
+                experience: {
+                    text: "That's a beautiful story. How would you describe your level of experience?",
+                    options: [
+                        { text: "Emerging Artist 🌱", next: "style", value: "an emerging artist with fresh ideas" },
+                        { text: "Experienced Crafter ✨", next: "style", value: "an experienced crafter with years of dedication" },
+                        { text: "Master Artisan 🏆", next: "style", value: "a master artisan with decades of honed skill" }
+                    ],
+                    key: "artistExperience"
+                },
+                style: {
+                    text: "Excellent. And what word best describes your artistic style?",
+                    options: [
+                        { text: "Minimalist", next: "generate", value: "minimalist and modern" },
+                        { text: "Vibrant & Bold", next: "generate", value: "vibrant and bold" },
+                        { text: "Classic & Timeless", next: "generate", value: "classic and timeless" }
+                    ],
+                    key: "artistStyle"
+                },
+                generate: { text: "Thank you! I have everything I need. Generating your marketing content now..." }
+            };
 
-                let currentNodeKey = "start";
+            let currentNodeKey = "start";
 
-                function showMessage(text, sender) {
-                    const messageElement = document.createElement("div");
-                    messageElement.classList.add("message", `${sender}-message`);
-                    messageElement.innerHTML = text;
-                    chatbox.appendChild(messageElement);
-                    chatbox.scrollTop = chatbox.scrollHeight;
-                }
+            function showMessage(text, sender) {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", `${sender}-message`);
+                messageElement.innerHTML = text;
+                chatbox.appendChild(messageElement);
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }
 
-                function renderNode(nodeKey) {
-                    const node = conversationTree[nodeKey];
-                    showMessage(node.text, "bot");
-                    inputArea.innerHTML = '';
-                    if (node.inputType === 'text') {
-                        const textInput = document.createElement("input");
-                        textInput.type = "text";
-                        textInput.placeholder = node.placeholder || "Type your answer...";
-                        textInput.className = "flex-grow border p-2 rounded-l-md text-black";
-                        const sendButton = document.createElement("button");
-                        sendButton.innerText = "Send";
-                        sendButton.className = "bg-blue-600 text-white px-4 rounded-r-md";
-                        const handleSubmit = () => {
-                            const userText = textInput.value.trim();
-                            if (userText) {
-                                tripData[node.key] = userText;
-                                showMessage(userText, "user");
-                                currentNodeKey = node.next;
-                                renderNode(currentNodeKey);
-                            }
-                        };
-                        sendButton.addEventListener("click", handleSubmit);
-                        textInput.addEventListener("keydown", (event) => { if (event.key === "Enter") handleSubmit(); });
-                        inputArea.appendChild(textInput);
-                        inputArea.appendChild(sendButton);
-                        textInput.focus();
-                    } else if (node.options) {
-                        node.options.forEach(option => {
-                            const button = document.createElement("button");
-                            button.className = "chat-button";
-                            button.innerText = option.text;
-                            button.addEventListener("click", () => {
-                                tripData[node.key] = option.value;
-                                showMessage(option.text, "user");
-                                currentNodeKey = option.next;
-                                renderNode(currentNodeKey);
-                            });
-                            inputArea.appendChild(button);
-                        });
-                    } else if (nodeKey === 'generate') {
-                        getAIPlan(tripData);
-                    }
-                }
-
-                async function getAIPlan(data) {
-                    const loadingMessage = `<div class="loading-dots"><span></span><span></span><span></span></div>`;
-                    showMessage(loadingMessage, "bot");
-                    try {
-                        const response = await fetch('/.netlify/functions/generate-response', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(data)
-                        });
-                        if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
-                        const plan = await response.json();
-                        displayPlan(plan);
-                    } catch (error) {
-                        console.error("Failed to get plan:", error);
-                        showMessage("Sorry, I ran into an error trying to create your plan. Please try again later.", "bot");
-                    }
-                }
-
-                function displayPlan(plan) {
-                    let html = `<h3>Here's your trip to ${plan.tripName}!</h3>`;
-                    plan.itinerary.forEach(day => {
-                        html += `<h4 class='mt-3 font-bold'>Day ${day.day}: ${day.theme}</h4><ul class='list-disc pl-5'>`;
-                        day.activities.forEach(activity => { html += `<li><strong>${activity.time}</strong>: ${activity.description}</li>`; });
-                        html += `</ul>`;
-                    });
-                    showMessage(html, "bot");
-                    showMessage("Would you like to start over?", "bot");
-                    const startOverButton = document.createElement("button");
-                    startOverButton.className = "chat-button";
-                    startOverButton.innerText = "Start Over";
-                    startOverButton.onclick = () => {
-                        tripData = {};
-                        chatbox.innerHTML = '';
-                        currentNodeKey = "start";
-                        renderNode(currentNodeKey);
+            function renderNode(nodeKey) {
+                const node = conversationTree[nodeKey];
+                showMessage(node.text, "bot");
+                inputArea.innerHTML = '';
+                if (node.inputType === 'text') {
+                    const textInput = document.createElement("input");
+                    textInput.type = "text";
+                    textInput.placeholder = node.placeholder || "Type your answer...";
+                    textInput.className = "flex-grow border p-2 rounded-l-md text-black";
+                    const sendButton = document.createElement("button");
+                    sendButton.innerText = "Send";
+                    sendButton.className = "bg-purple-700 text-white px-4 rounded-r-md";
+                    const handleSubmit = () => {
+                        const userText = textInput.value.trim();
+                        if (userText) {
+                            artistData[node.key] = userText;
+                            showMessage(userText, "user");
+                            currentNodeKey = node.next;
+                            renderNode(currentNodeKey);
+                        }
                     };
-                    inputArea.innerHTML = '';
-                    inputArea.appendChild(startOverButton);
+                    sendButton.addEventListener("click", handleSubmit);
+                    textInput.addEventListener("keydown", (event) => { if (event.key === "Enter") handleSubmit(); });
+                    inputArea.appendChild(textInput);
+                    inputArea.appendChild(sendButton);
+                    textInput.focus();
+                } else if (node.options) {
+                    node.options.forEach(option => {
+                        const button = document.createElement("button");
+                        button.className = "chat-button";
+                        button.innerText = option.text;
+                        button.addEventListener("click", () => {
+                            artistData[node.key] = option.value;
+                            showMessage(option.text, "user");
+                            currentNodeKey = option.next;
+                            renderNode(currentNodeKey);
+                        });
+                        inputArea.appendChild(button);
+                    });
+                } else if (nodeKey === 'generate') {
+                    getAIMarketingContent(artistData);
                 }
+            }
 
-                renderNode(currentNodeKey);
-            });
-        </script>
+            async function getAIMarketingContent(data) {
+                const loadingMessage = `<div class="loading-dots"><span></span><span></span><span></span></div>`;
+                showMessage(loadingMessage, "bot");
+                try {
+                    const response = await fetch('/api/generate-response', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+                    const content = await response.json();
+                    displayResults(content);
+                } catch (error) {
+                    console.error("Failed to get content:", error);
+                    showMessage("Sorry, I ran into an error. Please try again later.", "bot");
+                }
+            }
+
+            // --- NEW DISPLAY FUNCTION ---
+            function displayResults(content) {
+                let html = `<h3>Here's your custom marketing content!</h3>`;
+                
+                html += `<h4 class='mt-3 font-bold'>Social Media Story 📱</h4>`;
+                html += `<p class='mt-1 italic'>${content.socialMediaStory}</p>`;
+                
+                html += `<h4 class='mt-4 font-bold'>Business Taglines 💡</h4><ul class='list-disc pl-5'>`;
+                content.taglines.forEach(tagline => { html += `<li>${tagline}</li>`; });
+                html += `</ul>`;
+
+                html += `<h4 class='mt-4 font-bold'>Advertisement Text 📣</h4>`;
+                html += `<p class='mt-1 italic'>${content.advertisementText}</p>`;
+                
+                showMessage(html, "bot");
+                showMessage("Would you like to start over?", "bot");
+                
+                const startOverButton = document.createElement("button");
+                startOverButton.className = "chat-button";
+                startOverButton.innerText = "Start Over";
+                startOverButton.onclick = () => {
+                    artistData = {};
+                    chatbox.innerHTML = '';
+                    currentNodeKey = "start";
+                    renderNode(currentNodeKey);
+                };
+                inputArea.innerHTML = '';
+                inputArea.appendChild(startOverButton);
+            }
+
+            renderNode(currentNodeKey);
+        });
+    </script>
 </body>
 
 </html>
