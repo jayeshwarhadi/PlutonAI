@@ -78,9 +78,10 @@ export default async function handler(req, context) {
         }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        
-        // ✅ FINAL FIX: Clean the raw text to remove the markdown wrapper
         const cleanedText = rawText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+        
+        // ✅ NEW DEBUGGING LINE: This will show us the exact text that is causing the error.
+        console.log("Attempting to parse this JSON:", cleanedText);
         
         const tripPlan = JSON.parse(cleanedText);
 
