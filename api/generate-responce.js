@@ -47,6 +47,24 @@ export default async function handler(req, res) {
     // 4. Structure the request for the Gemini API
     const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
+        safetySettings: [
+            {
+                category: "HARM_CATEGORY_HARASSMENT",
+                threshold: "BLOCK_NONE",
+            },
+            {
+                category: "HARM_CATEGORY_HATE_SPEECH",
+                threshold: "BLOCK_NONE",
+            },
+            {
+                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                threshold: "BLOCK_NONE",
+            },
+            {
+                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                threshold: "BLOCK_NONE",
+            },
+        ],
     };
 
     // 5. Call the API and handle the response
@@ -67,7 +85,7 @@ export default async function handler(req, res) {
         // 6. Extract, clean, and parse the JSON output
         const rawText = result.candidates[0].content.parts[0].text;
         const tripPlan = JSON.parse(rawText);
-        
+
         // 7. Send the clean JSON back to the frontend
         res.status(200).json(tripPlan);
 
