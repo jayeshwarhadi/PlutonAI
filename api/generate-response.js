@@ -29,7 +29,7 @@ export default async function handler(req, context) {
         - Trip Duration: ${tripData.duration} days
         - Desired Vibe: ${tripData.vibe}
 
-        Your response MUST be in a valid JSON format. Do not include any introductory text, explanations, or markdown code blocks like \`\`\`json. The JSON object must have the following structure exactly:
+        Your response MUST be in a valid JSON format based on this structure:
         {
           "tripName": "A ${tripData.duration}-Day Trip to ${tripData.destination}",
           "itinerary": [
@@ -44,11 +44,15 @@ export default async function handler(req, context) {
             }
           ]
         }
-        Generate one object in the "itinerary" array for each day of the trip (e.g., a 3-day trip should have 3 objects in the array).
+        Generate one object in the "itinerary" array for each day of the trip (e.g., a 3-day trip should have 3 objects in the array). Do not include any text outside of the JSON object.
     `;
 
+    // ✅ FINAL FIX: Enable JSON Mode for reliable output
     const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+            "response_mime_type": "application/json",
+        },
         safetySettings: [
             { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
             { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -70,6 +74,7 @@ export default async function handler(req, context) {
             throw new Error(`API call failed with status: ${geminiResponse.status}`);
         }
 
+        // With JSON mode, we can parse the response directly without cleaning
         const result = await geminiResponse.json();
         
         if (!result.candidates || result.candidates.length === 0) {
@@ -78,12 +83,7 @@ export default async function handler(req, context) {
         }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        const cleanedText = rawText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
-        
-        // ✅ NEW DEBUGGING LINE: This will show us the exact text that is causing the error.
-        console.log("Attempting to parse this JSON:", cleanedText);
-        
-        const tripPlan = JSON.parse(cleanedText);
+        const tripPlan = JSON.parse(rawText);
 
         return new Response(JSON.stringify(tripPlan), {
             status: 200,
