@@ -290,7 +290,7 @@
                     const loadingMessage = `<div class="loading-dots"><span></span><span></span><span></span></div>`;
                     showMessage(loadingMessage, "bot");
                     try {
-                        const response = await fetch('/api/generate-response', {
+                        const response = await fetch('/.api/generate-response', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(data)
