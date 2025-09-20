@@ -24,7 +24,7 @@ export default async function handler(req, context) {
 
     // --- NEW PROMPT ---
     const prompt = `
-        You are an expert marketing assistant and copywriter for creative artists. 
+        You are an expert marketing assistant and copywriter for creative artists named PlutonAI. 
         Your task is to generate a social media story, three business taglines, and a captivating advertisement text based on the artist's details.
 
         Artist's Details:

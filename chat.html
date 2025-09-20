@@ -182,24 +182,21 @@
                 <div class="grid md:grid-cols-3 gap-8">
                     <div>
                         <h3 class="text-2xl font-bold mb-2"><span class="gradient-text">Pluton</span>AI</h3>
-                        <p class="text-gray-400">Empowering local creators through the power of generative AI.</p>
+                        <p class="text-gray-400">Empowering artists through the power of generative AI.</p>
                         <p class="text-gray-500 mt-4 text-sm">A <span class="font-bold">Hack2Skill Google Cloud GenAI
                             </span>Hackathon Project by <span class="gradient-text font-bold">Team Pluton</span></p>
-
                     </div>
                     <div>
                         <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
                         <ul class="space-y-2">
-                            <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white">Github Project</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white">Team Information</a></li>
+                            <li><a href="https://github.com/jayeshwarhadi/PlutonAI" target="_blank"
+                                    class="text-gray-400 hover:text-white">Github Project</a></li>
                         </ul>
                     </div>
                     <div>
                         <h4 class="font-semibold text-lg mb-4">Connect With Us</h4>
                         <div class="flex space-x-4">
-                            <a href="#" class="text-gray-400 hover:text-white">Github Repository</a>
-                            <a href="#" class="text-gray-400 hover:text-white">LinkedIN</a>
+                            <a href="team.html" class="text-gray-400 hover:text-white">Team Members</a>
                         </div>
                     </div>
                 </div>
@@ -214,7 +211,7 @@
                 // --- NEW CONVERSATION FLOW ---
                 const conversationTree = {
                     start: {
-                        text: "Hello! Let's craft your brand's voice. To start, tell me a little about your story. What inspires you to create?",
+                        text: "Hello This is PlutonAI! Let's craft your brand's voice. To start, tell me a little about your story. What inspires you to create?",
                         inputType: 'text',
                         placeholder: 'e.g., I inherited my love for woodwork from my grandfather...',
                         key: "artistStory",
@@ -238,7 +235,7 @@
                         ],
                         key: "artistStyle"
                     },
-                    generate: { text: "Thank you! I have everything I need. Generating your marketing content now..." }
+                    generate: { text: "Thank you for using our GenAI hackathon Prototype 💕. Generating your marketing content now..." }
                 };
 
                 let currentNodeKey = "start";
@@ -315,7 +312,7 @@
 
                 // --- NEW DISPLAY FUNCTION ---
                 function displayResults(content) {
-                    let html = `<h3>Here's your custom marketing content!</h3>`;
+                    let html = `<h3>Here's your custom marketing content! thanks for using our prototype. </h3>`;
 
                     html += `<h4 class='mt-3 font-bold'>Social Media Story 📱</h4>`;
                     html += `<p class='mt-1 italic'>${content.socialMediaStory}</p>`;
