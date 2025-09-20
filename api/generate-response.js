@@ -1,22 +1,17 @@
 // SERVERLESS FUNCTION (api/generate-response.js)
 
-// Netlify Functions' handler takes a 'Request' object and a 'context' object.
 export default async function handler(req, context) {
-    // 1. Ensure this is a POST request
     if (req.method !== 'POST') {
-        // CHANGED: New return format
         return new Response(JSON.stringify({ error: "Method Not Allowed" }), {
             status: 405,
             headers: { 'Content-Type': 'application/json' }
         });
     }
 
-    const tripData = await req.json(); // CHANGED: We get the body by awaiting req.json()
+    const tripData = await req.json();
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-    // 2. Validate essential data is present
     if (!tripData.destination || !tripData.duration || !tripData.vibe || !GEMINI_API_KEY) {
-        // CHANGED: New return format
         return new Response(JSON.stringify({ error: "Missing required trip data or API key." }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
@@ -26,7 +21,6 @@ export default async function handler(req, context) {
     const model = 'gemini-1.5-flash-latest';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
 
-    // 3. Construct the powerful prompt for Gemini (This part is unchanged)
     const prompt = `
         You are an expert travel planner. Your task is to generate a detailed travel itinerary based on user preferences.
 
@@ -53,7 +47,6 @@ export default async function handler(req, context) {
         Generate one object in the "itinerary" array for each day of the trip (e.g., a 3-day trip should have 3 objects in the array).
     `;
 
-    // 4. Structure the request for the Gemini API (This part is unchanged)
     const requestBody = {
         contents: [{ parts: [{ text: prompt }] }],
         safetySettings: [
@@ -64,7 +57,6 @@ export default async function handler(req, context) {
         ],
     };
 
-    // 5. Call the API and handle the response
     try {
         const geminiResponse = await fetch(url, {
             method: 'POST',
@@ -74,24 +66,31 @@ export default async function handler(req, context) {
 
         if (!geminiResponse.ok) {
             const errorBody = await geminiResponse.text();
-            throw new Error(`API call failed with status: ${geminiResponse.status} and body: ${errorBody}`);
+            console.error("Error from Gemini API:", errorBody);
+            throw new Error(`API call failed with status: ${geminiResponse.status}`);
         }
 
         const result = await geminiResponse.json();
+        
+        if (!result.candidates || result.candidates.length === 0) {
+            console.error("Gemini API returned no candidates. Response:", result);
+            throw new Error("Gemini API returned no candidates.");
+        }
 
         const rawText = result.candidates[0].content.parts[0].text;
-        const tripPlan = JSON.parse(rawText);
+        
+        // ✅ FINAL FIX: Clean the raw text to remove the markdown wrapper
+        const cleanedText = rawText.replace(/^```json\s*/, '').replace(/```$/, '').trim();
+        
+        const tripPlan = JSON.parse(cleanedText);
 
-        // 7. Send the clean JSON back to the frontend
-        // CHANGED: New successful return format
         return new Response(JSON.stringify(tripPlan), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
 
     } catch (error) {
-        console.error("Error calling Gemini API:", error);
-        // CHANGED: New error return format
+        console.error("Error in handler:", error);
         return new Response(JSON.stringify({ error: "Failed to generate the trip plan." }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
