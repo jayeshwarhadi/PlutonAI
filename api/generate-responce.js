@@ -67,6 +67,7 @@ export default async function handler(req, res) {
         ],
     };
 
+    console.log(prompt); // testing
     // 5. Call the API and handle the response
     try {
         const geminiResponse = await fetch(url, {
