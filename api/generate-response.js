@@ -23,7 +23,7 @@ export default async function handler(req, context) {
         });
     }
 
-    const model = 'gemini-pro';
+    const model = 'gemini-1.5-flash-latest';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
 
     // 3. Construct the powerful prompt for Gemini (This part is unchanged)
