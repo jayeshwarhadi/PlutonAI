@@ -41,7 +41,7 @@ We built an AI-driven web platform that helps artisans:
 
 ## 📸 Presentation & Pitch
   
-![Presentation](https://github.com/jayeshwarhadi/jayeshwarhadi/blob/e34dfe0f4d32dd631110aa4c16258cda2badf2c5/assets/PlutonAI/GenAI.pdf)
+[Click to View Presentation.](https://github.com/jayeshwarhadi/jayeshwarhadi/blob/e34dfe0f4d32dd631110aa4c16258cda2badf2c5/assets/PlutonAI/GenAI.pdf)
 
 ---
 
