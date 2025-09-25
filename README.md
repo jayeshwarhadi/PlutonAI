@@ -26,8 +26,10 @@ We built an AI-driven web platform that helps artisans:
 
 ---
 
-## 🌐 Live Website
+## 🌐 Live Website and Demo Video
 👉 [Click Here to Visit { plutonai.netlify.app }](https://plutonai.netlify.app/)
+
+👉 [Click Here to View Demo Video.](https://youtu.be/n5rslG31NcA)
 
 ---
 
