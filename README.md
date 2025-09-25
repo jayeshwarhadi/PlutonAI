@@ -1,2 +1,68 @@
-# PlutonAI
-A Hack2Skill Google Cloud GenAI Hackathon Project by Team Pluton
+# 🚀 PlutonAI by Team Pluton
+
+![Hackathon Banner](https://raw.githubusercontent.com/jayeshwarhadi/jayeshwarhadi/ad069ca8f2da410ae05dfb0e8980db715617c41c/assets/PlutonAI/banner.png)
+
+---
+
+## 👥 Team Members
+- Yash Rathod – Team Leader / Management  
+- Jayesh Warhadi – Lead Developer / Website&Chatbot  
+- Varad Raikar – Chief Storyteller / Powerful Narative  
+- Rohan Ghevande – Pitch Architect / Project Design  
+
+---
+
+## 💡 Problem Statement
+AI-Powered Marketplace Assistant for Local Artisans.
+
+---
+
+## 🛠️ Solution
+We built an AI-driven web platform that helps artisans:
+- Generate market catchlines  .
+- Create story snippets  .
+- Get social media post suggestions . 
+- Get Advertisement Hooks with ease. 
+
+---
+
+## 🌐 Live Website
+👉 [Click Here to Visit { plutonai.netlify.app }](https://plutonai.netlify.app/)
+
+---
+
+## 📂 Features
+- ✅ Easy artisan onboarding  
+- ✅ AI-powered content suggestions  
+- ✅ Personalized storytelling support  
+- ✅ Social media integration  
+
+---
+
+## 📸 Presentation & Pitch
+  
+
+---
+
+## 🏆 Hackathon & Certificate
+- Participated in: **Hack2Skill GenAI Hackathon**  
+- Date: **21/09/2025**  
+- Certificate:  
+  Yet to be Released!
+  <!-- ![Certificate](./assets/certificate.png)   -->
+
+---
+
+## ⚙️ Tech Stack
+- **Frontend**: HTML-CSS-JS  
+- **Backend**: Netlify Serverless Functions  
+- **AI/ML**: Gemeni API 
+- **Deployment**: Netlify  
+
+---
+
+## 📧 Contact
+- 📩 Email: jayesh.warhadi@gmail.com
+- 🌐 Portfolio/Website: [Yet to be made public]
+- 💼 LinkedIn: https://linkedin.com/in/jayeshwarhadi 
+- 🐙 GitHub: https://github.com/jayeshwarhadi  
