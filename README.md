@@ -28,6 +28,9 @@ We built an AI-driven web platform that helps artisans:
 
 ## 🌐 Live Website and Demo Video
 👉 [Click Here to Visit { plutonai.netlify.app }](https://plutonai.netlify.app/)
+> [!CAUTION]  
+> Project IS NOT MAINTAINED . Now depreciated/changed **gemini-1.5-flash-latest** model was used in Gemini API . Check *Demo Video* for working example.
+
 
 👉 [Click Here to View Demo Video.](https://youtu.be/n5rslG31NcA)
 
@@ -51,7 +54,7 @@ We built an AI-driven web platform that helps artisans:
 - Participated in: **Hack2Skill GenAI Hackathon**  
 - Date: **21/09/2025**  
 - Certificate:  
-  Yet to be Released!
+  [Hack2Skill GenAi](https://certificate.hack2skill.com/user/genaipoweredmarketplace/2025H2S08GH-P701587)
   <!-- ![Certificate](./assets/certificate.png)   -->
 
 ---
@@ -67,5 +70,4 @@ We built an AI-driven web platform that helps artisans:
 ## 📧 Contact
 - 📩 Email: jayesh.warhadi@gmail.com
 - 🌐 Portfolio/Website: [Yet to be made public]
-- 💼 LinkedIn: https://linkedin.com/in/jayeshwarhadi 
-- 🐙 GitHub: https://github.com/jayeshwarhadi  
+- 💼 LinkedIn: https://linkedin.com/in/jayeshwarhadi  
