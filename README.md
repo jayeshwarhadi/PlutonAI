@@ -1,3 +1,6 @@
+> [!CAUTION]  
+> This Project has been archived . users can access this project with no restrictions . license is hereby nullified .
+
 # 🚀 PlutonAI by Team Pluton
 
 ![Hackathon Banner](https://raw.githubusercontent.com/jayeshwarhadi/jayeshwarhadi/ad069ca8f2da410ae05dfb0e8980db715617c41c/assets/PlutonAI/banner.png)
